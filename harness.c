@@ -144,7 +144,7 @@ void *test_malloc(size_t size)
         allocated->prev = new_block;
     allocated = new_block;
     allocated_count++;
-    return p;
+    return (void *) &new_block->payload;
 }
 
 void test_free(void *p)

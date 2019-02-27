@@ -51,6 +51,18 @@ void q_free(queue_t *q)
     free(q);
 }
 
+static bool _ele_add_string(list_ele_t *e, char *s)
+{
+    size_t s_len = strlen(s);
+    e->value = (char *) malloc(s_len + 1);
+    if (NULL == e->value) {
+        return false;
+    }
+    memcpy(e->value, s, s_len);
+    e->value[s_len] = '\0';
+    return true;
+}
+
 /*
   Attempt to insert element at head of queue.
   Return true if successful.
@@ -62,8 +74,18 @@ bool q_insert_head(queue_t *q, char *s)
 {
     list_ele_t *newh;
     /* What should you do if the q is NULL? */
+    if (NULL == q || NULL == s)
+        return false;
     newh = malloc(sizeof(list_ele_t));
+    if (NULL == newh)
+        return false;
+
     /* Don't forget to allocate space for the string and copy it */
+    if (false == _ele_add_string(newh, s)) {
+        free(newh);
+        return false;
+    }
+
     /* What if either call to malloc returns NULL? */
     newh->next = q->head;
     q->head = newh;

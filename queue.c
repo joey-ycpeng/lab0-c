@@ -29,6 +29,7 @@ queue_t *q_new()
     if (NULL == q)
         return NULL;
     q->head = NULL;
+    q->tail = NULL;
     q->size = 0;
     return q;
 }
@@ -89,6 +90,9 @@ bool q_insert_head(queue_t *q, char *s)
     /* What if either call to malloc returns NULL? */
     newh->next = q->head;
     q->head = newh;
+    if (++q->size == 1)
+        q->tail = q->head;
+
     return true;
 }
 
@@ -102,9 +106,27 @@ bool q_insert_head(queue_t *q, char *s)
  */
 bool q_insert_tail(queue_t *q, char *s)
 {
+    list_ele_t *newt;
     /* You need to write the complete code for this function */
     /* Remember: It should operate in O(1) time */
-    return false;
+    if (NULL == q || NULL == s)
+        return false;
+    newt = malloc(sizeof(list_ele_t));
+    if (NULL == newt)
+        return false;
+
+    if (false == _ele_add_string(newt, s)) {
+        free(newt);
+        return false;
+    }
+    if (q->tail)
+        q->tail->next = newt;
+    q->tail = newt;
+    newt->next = NULL;
+    if (++q->size == 1)
+        q->head = q->tail;
+
+    return true;
 }
 
 /*
